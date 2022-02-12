@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>Nexus.Contracts.Users</PackageId>
+        <PackageVersion>0.4.22</PackageVersion>
+        <Title>Nexus Users Contracts</Title>
+        <Authors>Team Revelation</Authors>
+        <Description>Contracts library for the Nexus users service</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.2-mauipre.1.22054.8" />
+      <PackageReference Include="Nexus.Contracts.Database" Version="0.4.13" />
+      <PackageReference Include="Nexus.Types" Version="0.4.21" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chats-deployment
+  labels:
+    app: chats
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: chats
+  template:
+    metadata:
+      labels:
+        app: chats
+    spec:
+      volumes:
+        - name: google-cloud-key
+          secret:
+            secretName: firestore-key
+      containers:
+        - name: chats
+          image: # CREDENTIALS
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: NEXUS_API_KEY
+              value: # CREDENTIALS
+            - name: REDIS_CONNECTION_STRING
+              value: # CREDENTIALS
+            - name: REDIS_USERNAME
+              value: # CREDENTIALS
+            - name: REDIS_PASSWORD
+              value: # CREDENTIALS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chats-service
+  labels:
+    app: chats
+spec:
+  type: NodePort
+  selector:
+    app: chats
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

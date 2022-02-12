@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>Nexus.Types</PackageId>
+        <PackageVersion>0.4.21</PackageVersion>
+        <Title>Nexus types</Title>
+        <Authors>Team Revelation</Authors>
+        <Description>Types library for the Nexus chatting framework.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Google.Cloud.Firestore" Version="2.5.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+</Project>

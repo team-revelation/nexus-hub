@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <PackageId>Nexus.Authentication</PackageId>
+        <PackageVersion>0.4.8</PackageVersion>
+        <Title>Nexus authentication</Title>
+        <Authors>Team Revelation</Authors>
+        <Description>Authentication library for the Nexus chatting framework.</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FirebaseAdmin" Version="2.2.0" />
+      <PackageReference Include="Microsoft.AspNet.Mvc.Abstractions" Version="6.0.0-rc1-final" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.2-mauipre.1.22054.8" />
+    </ItemGroup>
+
+</Project>

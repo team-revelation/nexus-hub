@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websockets-deployment
+  labels:
+    app: websockets
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: websockets
+  template:
+    metadata:
+      labels:
+        app: websockets
+    spec:
+      volumes:
+        - name: google-cloud-key
+          secret:
+            secretName: firestore-key
+      containers:
+        - name: websockets
+          image: # CREDENTIALS
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: NEXUS_API_KEY
+              value: # CREDENTIALS
+            - name: REDIS_CONNECTION_STRING
+              value: # CREDENTIALS
+            - name: REDIS_USERNAME
+              value: # CREDENTIALS
+            - name: REDIS_PASSWORD
+              value: # CREDENTIALS
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websockets-service
+  labels:
+    app: websockets
+  annotations:
+    cloud.google.com/backend-config: '{"default": "websocket-backendconfig"}'
+spec:
+  type: NodePort
+  selector:
+    app: websockets
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

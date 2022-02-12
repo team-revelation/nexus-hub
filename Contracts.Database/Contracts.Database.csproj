@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>0.4.13</PackageVersion>
+        <Title>Nexus Database Contracts</Title>
+        <Authors>Team Revelation</Authors>
+        <Description>Contracts library for the Nexus database service</Description>
+        <PackageId>Nexus.Contracts.Database</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Flurl" Version="3.0.4" />
+      <PackageReference Include="Flurl.Http" Version="3.2.2" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.2-mauipre.1.22054.8" />
+    </ItemGroup>
+
+</Project>

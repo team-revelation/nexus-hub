@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: default-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.global-static-ip-name: # CREDENTIALS
+    kubernetes.io/ingress.class: gce
+  labels:
+    app: ingress
+spec:
+  rules:
+    - host: gateway.nexus.rest
+      http:
+        paths:
+          - path: /api/ws
+            pathType: Prefix
+            backend:
+              service:
+                name: websockets-service
+                port:
+                  number: 80
+          - path: /api/chats
+            pathType: Prefix
+            backend:
+              service:
+                name: chats-service
+                port:
+                  number: 80
+          - path: /api/users
+            pathType: Prefix
+            backend:
+              service:
+                name: users-service
+                port:
+                  number: 80
+          - path: /api/friends
+            pathType: Prefix
+            backend:
+              service:
+                name: users-service
+                port:
+                  number: 80
+          - path: /api/submissions
+            pathType: Prefix
+            backend:
+              service:
+                name: exploring-service
+                port:
+                  number: 80
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: websocket-backendconfig
+spec:
+  timeoutSec: 86400

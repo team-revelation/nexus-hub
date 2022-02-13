@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FirebaseAdmin.Messaging;
@@ -62,9 +63,13 @@ namespace Contracts.Notifications
                     {
                         singleMessage.Apns = new ApnsConfig
                         {
+                            Aps = new Aps
+                            {
+                                MutableContent = true,
+                            },
                             FcmOptions = new ApnsFcmOptions
                             {
-                                ImageUrl = notification.Object.ImageUrl
+                                ImageUrl = notification.Object.ImageUrl,
                             }
                         };
                     }
@@ -85,17 +90,21 @@ namespace Contracts.Notifications
                                 Icon = GetIcon(notification.Type),
                                 Color = notification.Color,
                             }
-                        }
+                        },
                     };
 
                     if (!string.IsNullOrEmpty(notification.Object.ImageUrl))
                     {
                         multiMessage.Apns = new ApnsConfig
                         {
+                            Aps = new Aps
+                            {
+                                MutableContent = true,
+                            },
                             FcmOptions = new ApnsFcmOptions
                             {
                                 ImageUrl = notification.Object.ImageUrl
-                            }
+                            },
                         };
                     }
                     

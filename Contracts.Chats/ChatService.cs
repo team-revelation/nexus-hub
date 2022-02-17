@@ -67,7 +67,7 @@ namespace Contracts.Chats
         public async Task<Chat> Create(Chat chat)
         {
             if (chat.Uuid == Guid.Empty) chat.Uuid = Guid.NewGuid();
-            await _databaseService.Create("chats", chat.Uuid.ToString("D"), chat, typeof(Chat));
+            await _databaseService.Create("chats", chat.Uuid.ToString("D"), chat);
             return chat;
         }
 
@@ -81,7 +81,7 @@ namespace Contracts.Chats
         /// <exception cref="ApplicationException">The server failed to update the chat.</exception>
         public async Task<Chat> Update(Guid uuid, Chat chat)
         {
-            await _databaseService.Update("chats", chat.Uuid.ToString("D"), chat, typeof(Chat));
+            await _databaseService.Update("chats", chat.Uuid.ToString("D"), chat);
             return chat;
         }
         

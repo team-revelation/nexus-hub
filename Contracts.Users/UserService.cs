@@ -69,7 +69,7 @@ namespace Contracts.Users
         public async Task<User> Create(User user)
         {
             if (user.Uuid == Guid.Empty) user.Uuid = Guid.NewGuid();
-            await _databaseService.Create("users", user.Uuid.ToString("D"), user, typeof(User));
+            await _databaseService.Create("users", user.Uuid.ToString("D"), user);
             return user;
         }
 
@@ -100,7 +100,7 @@ namespace Contracts.Users
                 Friends = user.Friends ?? existingUser.Friends
             };
 
-            await _databaseService.Update("users", uuid.ToString("D"), existingUser, typeof(User));
+            await _databaseService.Update("users", uuid.ToString("D"), existingUser);
             return existingUser;
         }
 

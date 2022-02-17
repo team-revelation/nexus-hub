@@ -1,75 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Flurl;
-using Flurl.Http;
+using Contracts.Database.Firestore;
 
 namespace Contracts.Database
 {
     public class DatabaseService : IDatabaseService
     {
-        public async Task Create(string collection, string document, object obj, Type type)
+        private readonly IFirestoreService _firestoreService;
+        public DatabaseService(IFirestoreService firestoreService)
         {
-            await "http://firestore-service"
-                  .AppendPathSegments("api", "create", collection, document)
-                  .PostJsonAsync(new SetRequest(type.AssemblyQualifiedName, obj));
+            _firestoreService = firestoreService;
+        }
+
+        public async Task Create<T>(string collection, string document, T obj)
+        {
+            await _firestoreService.Add(collection, document, obj);
         }
 
         public async Task<List<T>> Query<T>(string collection, List<string> documents)
         {
-            return await "http://firestore-service"
-                        .AppendPathSegments("api", "query", collection)
-                        .SetQueryParam("documents", documents)
-                        .GetJsonAsync<List<T>>();
+            var data = await _firestoreService.Query<T>(collection, documents);
+            if (data is null) throw new NullReferenceException($"{collection} is null.");
+            return data;
         }
         
         public async Task<List<T>> All<T>(string collection)
         {
-            try
-            {
-                return await "http://firestore-service"
-                            .AppendPathSegments("api", "all", collection)
-                            .GetJsonAsync<List<T>>();
-            }
-            catch (Exception)
-            {
-                return new List<T> ();
-            }
+            var data = await _firestoreService.All<T>(collection);
+            if (data is null) throw new NullReferenceException($"{collection} is null.");
+            return data;
         }
 
         public async Task<T> Get<T>(string collection, string document)
         {
-            try 
-            {
-                return await "http://firestore-service"
-                            .AppendPathSegments("api", "get", collection, document)
-                            .GetJsonAsync<T>();
-            }
-            catch (Exception)
-            {
-                return default;
-            }
+            return await _firestoreService.Get<T>(collection, document);
         }
 
-        public async Task Update(string collection, string document, object newObj, Type type)
+        public async Task Update<T>(string collection, string document, T newObj)
         {
-            await "http://firestore-service"
-                 .AppendPathSegments("api", "update", collection, document)
-                 .PutJsonAsync(new SetRequest(type.AssemblyQualifiedName, newObj));
+            await _firestoreService.Update(collection, document, newObj);
         }
 
         public async Task Delete(string collection, string document)
         {
-            await "http://firestore-service"
-                 .AppendPathSegments("api", "remove", collection, document)
-                 .DeleteAsync();
+            await _firestoreService.Remove(collection, document);
         }
 
         public async Task Clear(string collection)
         {
-            await "http://firestore-service"
-                 .AppendPathSegments("api", "clear", collection)
-                 .DeleteAsync();
+            await _firestoreService.Clear(collection);
         }
     }
 }

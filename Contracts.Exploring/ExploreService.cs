@@ -49,7 +49,7 @@ namespace Contracts.Exploring
         {
             if (user.Uuid == Guid.Empty) user.Uuid = Guid.NewGuid();
             var submission = new Submission(user, position);
-            await _databaseService.Create("submissions", user.Uuid.ToString("D"), submission, typeof(Submission));
+            await _databaseService.Create("submissions", user.Uuid.ToString("D"), submission);
             return submission;
         }
 
@@ -76,7 +76,7 @@ namespace Contracts.Exploring
                 Position = position
             };
 
-            await _databaseService.Update("submissions", user.Uuid.ToString("D"), existingSubmission, typeof(Submission));
+            await _databaseService.Update("submissions", user.Uuid.ToString("D"), existingSubmission);
             return existingSubmission;
         }
 

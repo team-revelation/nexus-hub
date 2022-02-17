@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.4.13</PackageVersion>
+        <PackageVersion>0.5.4</PackageVersion>
         <Title>Nexus Database Contracts</Title>
         <Authors>Team Revelation</Authors>
         <Description>Contracts library for the Nexus database service</Description>
@@ -11,9 +11,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="FirebaseAdmin" Version="2.2.0" />
       <PackageReference Include="Flurl" Version="3.0.4" />
       <PackageReference Include="Flurl.Http" Version="3.2.2" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.2-mauipre.1.22054.8" />
+      <PackageReference Include="Google.Cloud.Firestore" Version="2.5.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.2-mauipre.1.22102.15" />
+      <PackageReference Include="Nexus.Contracts.Memorystore" Version="0.5.3" />
     </ItemGroup>
 
 </Project>

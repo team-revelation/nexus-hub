@@ -35,6 +35,10 @@ spec:
               value: http://+:80
             - name: NEXUS_API_KEY
               value: # CREDENTIALS
+            - name: REDISHOST
+              value: # CREDENTIALS
+            - name: REDISPORT
+              value: # CREDENTIALS
 ---
 apiVersion: v1
 kind: Service

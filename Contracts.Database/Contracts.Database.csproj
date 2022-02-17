@@ -16,7 +16,7 @@
       <PackageReference Include="Flurl.Http" Version="3.2.2" />
       <PackageReference Include="Google.Cloud.Firestore" Version="2.5.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.2-mauipre.1.22102.15" />
-      <PackageReference Include="Nexus.Contracts.Memorystore" Version="0.5.3" />
+      <PackageReference Include="Nexus.Contracts.Memorystore" Version="0.5.4" />
     </ItemGroup>
 
 </Project>

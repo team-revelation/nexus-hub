@@ -3,6 +3,7 @@
   <component name="UserContentModel">
     <attachedFolders>
       <Path>../nexus-credentials</Path>
+      <Path>Deployment</Path>
       <Path>Kubernetes</Path>
     </attachedFolders>
     <explicitIncludes />

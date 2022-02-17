@@ -46,7 +46,7 @@ namespace Contracts.Memorystore
             var server = _memorystore.GetServer(endpoints.First());
             var db = _memorystore.GetDatabase();
             
-            var keys = server.Keys(db.Database, $"{coll}.");
+            var keys = server.Keys(db.Database, $"{coll}.*");
             return keys.Select(key => Get<T>(key));
         }
         

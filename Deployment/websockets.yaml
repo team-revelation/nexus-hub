@@ -41,6 +41,10 @@ spec:
               value: # CREDENTIALS
             - name: REDIS_PASSWORD
               value: # CREDENTIALS
+            - name: REDISHOST
+              value: # CREDENTIALS
+            - name: REDISPORT
+              value: # CREDENTIALS
 ---
 apiVersion: v1
 kind: Service

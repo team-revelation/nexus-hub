@@ -13,6 +13,7 @@
         <PackageReference Include="Nexus.Contracts.Chats" Version="0.5.3" />
         <PackageReference Include="Nexus.Contracts.Database" Version="0.5.4" />
         <PackageReference Include="Nexus.Contracts.Exploring" Version="0.5.3" />
+        <PackageReference Include="Nexus.Contracts.Memorystore" Version="0.5.4" />
         <PackageReference Include="Nexus.Contracts.Redis" Version="0.4.10" />
         <PackageReference Include="Nexus.Contracts.Users" Version="0.5.3" />
         <PackageReference Include="Nexus.Types" Version="0.4.21" />

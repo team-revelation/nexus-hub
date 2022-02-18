@@ -28,25 +28,6 @@ namespace Websockets.Services
         }
 
         /// <summary>
-        /// Get a websocket with the given options.
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public Dictionary<WebSocket, SocketRequest> Get(SocketOptions options)
-        {
-            return _sockets.Where(kvp => kvp.Value.Options.UserUuid == options.UserUuid).ToDictionary(s => s.Key, s=> s.Value);
-        }
-        
-        /// <summary>
-        /// Get all websockets.
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<WebSocket, SocketRequest> All()
-        {
-            return _sockets;
-        }
-        
-        /// <summary>
         ///     Listen to updates via a websocket.
         /// </summary>
         /// <param name="webSocket"></param>
@@ -58,7 +39,7 @@ namespace Websockets.Services
             await Receive(webSocket, buffer);
 
             var request = JsonConvert.DeserializeObject<SocketRequest>(Encoding.UTF8.GetString(buffer));
-            if (!await HandleRegister(bearer, request))
+            if (!await AuthorizeRegister(bearer, request))
             {
                 await webSocket.CloseAsync(WebSocketCloseStatus.EndpointUnavailable, "Not allowed to listen to this user.", CancellationToken.None);
                 return;
@@ -81,6 +62,11 @@ namespace Websockets.Services
             await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed connection.", CancellationToken.None);
         }
 
+        /// <summary>
+        /// Send data through the websocket.
+        /// </summary>
+        /// <param name="webSocket"></param>
+        /// <param name="data"></param>
         private async Task Send(WebSocket webSocket, RedisData data)
         {
             if (webSocket.State != WebSocketState.Open) return;
@@ -91,51 +77,29 @@ namespace Websockets.Services
         }
 
         /// <summary>
-        ///     Send data to a specific websocket.
+        /// Handle websocket messages being sent through the websocket.
         /// </summary>
         /// <param name="webSocket"></param>
-        /// <param name="data"></param>
-        /// <param name="type"></param>
-        /// <exception cref="EncoderFallbackException">A fallback occured while converting data to bytes.</exception>
-        public async Task Send(WebSocket webSocket, object data, string type)
-        {
-            if (webSocket.State != WebSocketState.Open) return;
-            
-            var payload = new SocketPayload(type, data);
-            await Send(webSocket, payload.ToString());
-        }
-
-        /// <summary>
-        ///     Send data to multiple websocket.
-        /// </summary>
-        /// <param name="webSockets"></param>
-        /// <param name="data"></param>
-        /// <param name="type"></param>
-        /// <exception cref="EncoderFallbackException">A fallback occured while converting data to bytes.</exception>
-        public async Task Send(List<WebSocket> webSockets, object data, string type)
-        {
-            var payload = new SocketPayload(type, data);
-            foreach (var webSocket in webSockets)
-                if (webSocket.State == WebSocketState.Open)
-                    await Send(webSocket, payload.ToString());
-        }
-
+        /// <param name="request"></param>
         private async Task HandleMessage(WebSocket webSocket, SocketMessage request)
         {
             switch (request.Type)
             {
                 case SocketType.Typing:
-                    if (Guid.TryParse(request.Options.UserUuid, out var guid))
-                    {
-                        // TODO: Implement Redis typing cache.
-                    }
                     break;
                 case SocketType.Ping:
                     await Send(webSocket, "{\"type\":\"pong\"}");
                     break;
             }
         }
-        private async Task<bool> HandleRegister(string bearer, SocketRequest request)
+        
+        /// <summary>
+        /// Authorize the new websocket connection.
+        /// </summary>
+        /// <param name="bearer"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private async Task<bool> AuthorizeRegister(string bearer, SocketRequest request)
         {
             User user = null;
             if (Guid.TryParse(request.Options.UserUuid, out var guid))
@@ -153,6 +117,11 @@ namespace Websockets.Services
             return true;
         }
 
+        /// <summary>
+        /// Send a message through the websocket
+        /// </summary>
+        /// <param name="webSocket"></param>
+        /// <param name="data"></param>
         private async Task Send(WebSocket webSocket, string data)
         {
             if (webSocket.State == WebSocketState.Open)
@@ -160,14 +129,24 @@ namespace Websockets.Services
                 var bytes = Encoding.UTF8.GetBytes(data);
                 await webSocket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Binary, true, CancellationToken.None);
             }
+            else _sockets.Remove(webSocket);
         }
 
+        /// <summary>
+        /// Receive message from the websocket and put it in the buffer.
+        /// </summary>
+        /// <param name="webSocket"></param>
+        /// <param name="buffer"></param>
         private async Task Receive(WebSocket webSocket, byte[] buffer)
         {
             Clear(buffer);
             await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
         }
 
+        /// <summary>
+        /// Clear the current buffer.
+        /// </summary>
+        /// <param name="buffer"></param>
         private void Clear(byte[] buffer)
         {
             Array.Clear(buffer, 0, buffer.Length);

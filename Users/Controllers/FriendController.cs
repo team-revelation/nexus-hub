@@ -26,7 +26,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Get all the friends of a specific user.
+        /// Get all the friends of a specific user.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -40,7 +40,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Get a all the pending friends of a specific user.
+        /// Get a all the pending friends of a specific user.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -54,7 +54,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Get a friend of a specific user if they are their friend.
+        /// Get a friend of a specific user if they are their friend.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="friendUuid"></param>
@@ -70,7 +70,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Send a friend request to another user.
+        /// Send a friend request to another user.
         /// </summary>
         /// <param name="friendUuid"></param>
         /// <param name="uuid"></param>
@@ -88,7 +88,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Send a friend request to another user.
+        /// Send a friend request to another user.
         /// </summary>
         /// <param name="friendEmail"></param>
         /// <param name="uuid"></param>
@@ -107,7 +107,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Accept an incoming friend request.
+        /// Accept an incoming friend request.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="friendUuid"></param>
@@ -125,7 +125,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Decline an incoming friend request.
+        /// Decline an incoming friend request.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="friendUuid"></param>
@@ -143,7 +143,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Remove an already existing friend.
+        /// Remove an already existing friend.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="friendUuid"></param>

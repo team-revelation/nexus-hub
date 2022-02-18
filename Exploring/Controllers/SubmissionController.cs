@@ -22,7 +22,7 @@ namespace Exploring.Controllers
         }
 
         /// <summary>
-        ///     Get every submission in the database.
+        /// Get every submission in the database.
         /// </summary>
         /// <returns></returns>
         [TokenAuth]
@@ -34,7 +34,7 @@ namespace Exploring.Controllers
         }
 
         /// <summary>
-        ///     Get submission with uuid.
+        /// Get submission with uuid.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -47,7 +47,7 @@ namespace Exploring.Controllers
         }
 
         /// <summary>
-        ///     Create a new submission.
+        /// Create a new submission.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -60,7 +60,7 @@ namespace Exploring.Controllers
         }
 
         /// <summary>
-        ///     Update an already existing chat.
+        /// Update an already existing chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="request"></param>
@@ -74,7 +74,7 @@ namespace Exploring.Controllers
         }
 
         /// <summary>
-        ///     Delete an already existing chat.
+        /// Delete an already existing chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -87,7 +87,7 @@ namespace Exploring.Controllers
         }
 
         /// <summary>
-        ///     Clear all chats.
+        /// Clear all chats.
         /// </summary>
         /// <returns></returns>
         [KeyAuth]

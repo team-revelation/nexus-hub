@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Authentication;
 using Chats.Commands;
+using Chats.Commands.Chats;
+using Chats.Commands.Messages;
 using Chats.Notifications;
 using Chats.Queries;
 using MediatR;
@@ -23,7 +25,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Get every chat in the database.
+        /// Get every chat in the database.
         /// </summary>
         /// <returns></returns>
         [KeyAuth]
@@ -37,7 +39,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Get all chats that have a user as member.
+        /// Get all chats that have a user as member.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -52,7 +54,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Get a chat with a specific uuid.
+        /// Get a chat with a specific uuid.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -67,7 +69,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Join an already existing chat.
+        /// Join an already existing chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="request"></param>
@@ -84,7 +86,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Leave a chat.
+        /// Leave a chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="userUuid"></param>
@@ -101,7 +103,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Send a message to everyone in a chat.
+        /// Send a message to everyone in a chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="message"></param>
@@ -118,7 +120,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Vote for a poll that is attached to a message.
+        /// Vote for a poll that is attached to a message.
         /// </summary>
         /// <param name="userUuid"></param>
         /// <param name="chatUuid"></param>
@@ -138,17 +140,17 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Edit an already existing message.
+        /// Edit an already existing message.
         /// </summary>
-        /// <param name="uuid"></param>
+        /// <param name="chatUuid"></param>
         /// <param name="messageUuid"></param>
         /// <param name="message"></param>
         /// <returns></returns>
         [TokenAuth]
-        [HttpPut("{uuid:guid}/{messageUuid:guid}/edit")]
-        public async Task<IActionResult> Edit(Guid uuid, Guid messageUuid, [FromBody] Message message)
+        [HttpPut("{chatUuid:guid}/{messageUuid:guid}/edit")]
+        public async Task<IActionResult> Edit(Guid chatUuid, Guid messageUuid, [FromBody] Message message)
         {
-            var res = await _mediator.Send(new EditMessageCommand(messageUuid, uuid, message));
+            var res = await _mediator.Send(new EditMessageCommand(messageUuid, chatUuid, message));
             res = await _mediator.Send(new FillChatCommand(res));
             
             await _mediator.Publish(new UpdateChatNotification(res));
@@ -156,7 +158,45 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     React to an already existing message.
+        /// Edit an already existing poll.
+        /// </summary>
+        /// <param name="chatUuid"></param>
+        /// <param name="messageUuid"></param>
+        /// <param name="pollUuid"></param>
+        /// <param name="poll"></param>
+        /// <returns></returns>
+        [TokenAuth]
+        [HttpPut("{chatUuid:guid}/{messageUuid:guid}/polls/{pollUuid:guid}/edit")]
+        public async Task<IActionResult> Edit(Guid chatUuid, Guid messageUuid, Guid pollUuid, [FromBody] Poll poll)
+        {
+            var res = await _mediator.Send(new EditPollCommand(pollUuid, messageUuid, chatUuid, poll));
+            res = await _mediator.Send(new FillChatCommand(res));
+            
+            await _mediator.Publish(new UpdateChatNotification(res));
+            return Accepted(res);
+        }
+
+        /// <summary>
+        /// Edit an already existing checklist.
+        /// </summary>
+        /// <param name="chatUuid"></param>
+        /// <param name="messageUuid"></param>
+        /// <param name="checklistUuid"></param>
+        /// <param name="checklist"></param>
+        /// <returns></returns>
+        [TokenAuth]
+        [HttpPut("{chatUuid:guid}/{messageUuid:guid}/checklists/{checklistUuid:guid}/edit")]
+        public async Task<IActionResult> Edit(Guid chatUuid, Guid messageUuid, Guid checklistUuid, [FromBody] Checklist checklist)
+        {
+            var res = await _mediator.Send(new EditChecklistCommand(checklistUuid, messageUuid, chatUuid, checklist));
+            res = await _mediator.Send(new FillChatCommand(res));
+            
+            await _mediator.Publish(new UpdateChatNotification(res));
+            return Accepted(res);
+        }
+
+        /// <summary>
+        /// React to an already existing message.
         /// </summary>
         /// <param name="userUuid"></param>
         /// <param name="chatUuid"></param>
@@ -175,7 +215,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Cancel sending the message.
+        /// Cancel sending the message.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="messageUuid"></param>
@@ -192,7 +232,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Read all messages in a chat.
+        /// Read all messages in a chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="userUuid"></param>
@@ -209,7 +249,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Mark message in a chat as unread.
+        /// Mark message in a chat as unread.
         /// </summary>
         /// <param name="chatUuid"></param>
         /// <param name="messageUuid"></param>
@@ -227,7 +267,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Create a new chat.
+        /// Create a new chat.
         /// </summary>
         /// <param name="chat"></param>
         /// <returns></returns>
@@ -241,7 +281,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Update an already existing chat.
+        /// Update an already existing chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="chat"></param>
@@ -258,7 +298,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Delete an already existing chat.
+        /// Delete an already existing chat.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -274,7 +314,7 @@ namespace Chats.Controllers
         }
 
         /// <summary>
-        ///     Clear all chats.
+        /// Clear all chats.
         /// </summary>
         /// <returns></returns>
         [KeyAuth]

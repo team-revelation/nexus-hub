@@ -23,7 +23,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Get every user in the database.
+        /// Get every user in the database.
         /// </summary>
         /// <returns></returns>
         [KeyAuth]
@@ -36,7 +36,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Get a user with a specific uuid.
+        /// Get a user with a specific uuid.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -50,7 +50,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Get a user with a specific email address.
+        /// Get a user with a specific email address.
         /// </summary>
         /// <param name="userEmail"></param>
         /// <returns></returns>
@@ -64,7 +64,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Add a new user.
+        /// Add a new user.
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -77,7 +77,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Update an already existing user.
+        /// Update an already existing user.
         /// </summary>
         /// <param name="uuid"></param>
         /// <param name="user"></param>
@@ -96,7 +96,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Delete an already existing user.
+        /// Delete an already existing user.
         /// </summary>
         /// <param name="uuid"></param>
         /// <returns></returns>
@@ -109,7 +109,7 @@ namespace Users.Controllers
         }
 
         /// <summary>
-        ///     Clear all users.
+        /// Clear all users.
         /// </summary>
         /// <returns></returns>
         [KeyAuth]

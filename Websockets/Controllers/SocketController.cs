@@ -17,7 +17,7 @@ namespace Websockets.Controllers
         }
 
         /// <summary>
-        ///     Initialize a websocket connection.
+        /// Initialize a websocket connection.
         /// </summary>
         /// <returns></returns>
         [TokenAuth]
@@ -29,12 +29,9 @@ namespace Websockets.Controllers
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 await _socketService.Listen(webSocket, TokenAuthAttribute.CurrentEmail);
             }
-            else
-            {
-                return BadRequest("This is not a websocket request.");
-            }
+            else return BadRequest("This is not a websocket request.");
 
-            return new EmptyResult();
+            return Ok();
         }
     }
 }

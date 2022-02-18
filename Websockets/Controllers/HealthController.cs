@@ -7,7 +7,7 @@ namespace Websockets.Controllers
     public class HealthController : ControllerBase
     {
         /// <summary>
-        ///     Health check for the api.
+        /// Health check for the api.
         /// </summary>
         /// <returns></returns>
         [HttpGet]

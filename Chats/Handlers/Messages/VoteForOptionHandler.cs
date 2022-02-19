@@ -38,18 +38,11 @@ namespace Chats.Handlers.Messages
             if (poll.Options.Count <= request.Vote)
                 throw new ArgumentException("This is an invalid vote.");
 
-            var hasVoted = false;
-            foreach (var option in poll.Options)
-            {
-                if (option.Votes.Contains(request.UserUuid))
-                {
-                    hasVoted = true;
-                    option.Votes.Remove(request.UserUuid);
-                }
-            }
+            foreach (var option in poll.Options.Where(option => option.Votes.Contains(request.UserUuid)))
+                option.Votes.Remove(request.UserUuid);
             
             poll.Options[request.Vote].Votes.Add(request.UserUuid);
-            if (!hasVoted) poll.Votes++;
+            poll.Votes = poll.Options.SelectMany(o => o.Votes).Count();
             
             chat.Messages[messageIndex] = message;
             

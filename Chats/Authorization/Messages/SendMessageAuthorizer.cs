@@ -21,11 +21,11 @@ namespace Chats.Authorization.Messages
             UseRequirement(new MustHaveUserRequirement
             {
                 IsAuthorizedCheck = user =>
-                                    {
-                                        var isMessageCreator = request.Message.Creator == user.Uuid;
-                                        var isMember = chat.Members.Any(member => member.Uuid == user.Uuid);
-                                        return isMessageCreator && isMember;
-                                    }
+                {
+                    var isMessageCreator = request.Message.Creator == user.Uuid;
+                    var isMember = chat.Members.Any(m => m.Uuid == user.Uuid);
+                    return isMessageCreator && isMember;
+                }
             });
         }
     }

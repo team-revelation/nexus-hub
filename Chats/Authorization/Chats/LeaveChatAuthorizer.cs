@@ -22,14 +22,14 @@ namespace Chats.Authorization.Chats
             UseRequirement(new MustHaveUserRequirement
             {
                 IsAuthorizedCheck = user =>
-                                    {
-                                        var member = chat.Members.FirstOrDefault(member => member.Uuid == user.Uuid);
-                                        var isSameUser = request.UserUuid == user.Uuid;
-                                        var roles = chat.Roles.Where(r => member?.Roles.Contains(r.Uuid) == true).ToList();
-                                        var hasPrivileges = roles.Any(role => role.Privileges.Contains(Privilege.RemoveUser));
-                                        
-                                        return member is not null && (isSameUser || hasPrivileges == true);
-                                    }
+                {
+                    var member = chat.Members.FirstOrDefault(m => m.Uuid == user.Uuid);
+                    var isSameUser = request.UserUuid == user.Uuid;
+                    var roles = chat.Roles.Where(r => member?.Roles.Contains(r.Uuid) == true).ToList();
+                    var hasPrivileges = roles.Any(r => r.Privileges.Contains(Privilege.RemoveUser));
+                    
+                    return member is not null && (isSameUser || hasPrivileges);
+                }
             });
         }
     }

@@ -20,7 +20,12 @@ namespace Chats.Authorization.Chats
             var chat = await _chatService.Get(request.Uuid);
             UseRequirement(new MustHaveUserRequirement
             {
-                IsAuthorizedCheck = user => chat.Members.Any(member => member.Uuid == user.Uuid)
+                IsAuthorizedCheck = user =>
+                {
+                    var isSameUser = request.Uuid == user.Uuid;
+                    var isMember = chat.Members.Any(member => member.Uuid == user.Uuid);
+                    return isSameUser && isMember;
+                }
             });
         }
     }

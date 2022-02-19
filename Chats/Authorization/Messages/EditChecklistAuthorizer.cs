@@ -17,14 +17,14 @@ namespace Chats.Authorization.Messages
 
         public override async void BuildPolicy(EditChecklistCommand request)
         {
-            var message = (await _chatService.Get(request.ChatUuid)).Messages.FirstOrDefault(message => message.Uuid == request.MessageUuid);
+            var chat = await _chatService.Get(request.ChatUuid);
             UseRequirement(new MustHaveUserRequirement
             {
                 IsAuthorizedCheck = user =>
-                                    {
-                                        var isSameCreator = message?.Creator == user.Uuid;
-                                        return message is not null && isSameCreator;
-                                    }
+                {
+                    var isMember = chat?.Members.Any(m => m.Uuid == user.Uuid);
+                    return chat is not null && isMember == true;
+                }
             });
         }
     }

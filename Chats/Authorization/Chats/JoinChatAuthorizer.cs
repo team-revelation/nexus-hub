@@ -22,12 +22,13 @@ namespace Chats.Authorization.Chats
             UseRequirement(new MustHaveUserRequirement
             {
                 IsAuthorizedCheck = user =>
-                                    {
-                                        var member = chat.Members.FirstOrDefault(member => member.Uuid == user.Uuid);
-                                        var roles = chat.Roles.Where(r => member?.Roles.Contains(r.Uuid) == true).ToList();
-                                        var hasPermission = roles.Any(role => role.Privileges.Contains(Privilege.AddUser)) || chat.Members.Count <= 2 || chat.Members.All(m => m.Uuid != chat.Creator);
-                                        return member is not null && hasPermission;
-                                    }
+                {
+                    var isSameUser = request.Uuid == user.Uuid;
+                    var member = chat.Members.FirstOrDefault(m => m.Uuid == user.Uuid);
+                    var roles = chat.Roles.Where(r => member?.Roles.Contains(r.Uuid) == true).ToList();
+                    var hasPermission = roles.Any(r => r.Privileges.Contains(Privilege.AddUser)) || chat.Members.Count <= 2 || chat.Members.All(m => m.Uuid != chat.Creator);
+                    return member is not null && hasPermission && isSameUser;
+                }
             });
         }
     }

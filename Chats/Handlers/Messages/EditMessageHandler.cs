@@ -9,7 +9,7 @@ using Types.Chats;
 
 namespace Chats.Handlers.Messages
 {
-    public class EditMessageHandler : IRequestHandler<EditMessageCommand, Chat>
+    public class EditMessageHandler : IRequestHandler<EditMessageCommand, EditMessageResponse>
     {
         private readonly IChatService _chatService;
         
@@ -18,7 +18,7 @@ namespace Chats.Handlers.Messages
             _chatService = chatService;
         }
         
-        public async Task<Chat> Handle(EditMessageCommand request, CancellationToken cancellationToken)
+        public async Task<EditMessageResponse> Handle(EditMessageCommand request, CancellationToken cancellationToken)
         {
             var chat = await _chatService.Get(request.ChatUuid);
             if (chat is null)
@@ -37,7 +37,8 @@ namespace Chats.Handlers.Messages
                 Edited = DateTimeOffset.Now.ToUnixTimeMilliseconds()
             };
 
-            return await _chatService.Update(request.ChatUuid, chat);
+            await _chatService.Update(request.ChatUuid, chat);
+            return new (chat, chat.Messages[messageIndex]);
         }
     }
 }

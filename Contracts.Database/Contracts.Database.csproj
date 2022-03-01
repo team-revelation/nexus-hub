@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.5.4</PackageVersion>
+        <PackageVersion>0.5.5</PackageVersion>
         <Title>Nexus Database Contracts</Title>
         <Authors>Team Revelation</Authors>
         <Description>Contracts library for the Nexus database service</Description>

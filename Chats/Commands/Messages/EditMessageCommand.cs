@@ -4,7 +4,8 @@ using Types.Chats;
 
 namespace Chats.Commands.Messages
 {
-    public class EditMessageCommand : IRequest<Chat>
+    public record EditMessageResponse(Chat Chat, Message Message);
+    public class EditMessageCommand : IRequest<EditMessageResponse>
     {
         public Guid MessageUuid { get; }
         public Guid ChatUuid { get; }

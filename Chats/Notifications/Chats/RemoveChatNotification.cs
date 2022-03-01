@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Types.Chats;
 
-namespace Chats.Notifications
+namespace Chats.Notifications.Chats
 {
-    public class UpdateChatNotification : INotification
+    public class RemoveChatNotification : INotification
     {
         public Chat Chat { get; }
         
-        public UpdateChatNotification(Chat chat)
+        public RemoveChatNotification(Chat chat)
         {
             Chat = chat;
         }

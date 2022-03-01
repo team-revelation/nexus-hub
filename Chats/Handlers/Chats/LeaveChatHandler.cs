@@ -70,7 +70,7 @@ namespace Chats.Handlers.Chats
                 var notification = new Notification(
                     NotificationType.RemoveChat, 
                     $"{(isKickerUser ? "Left" : "Kicked from")} chat", 
-                    $"{(t.Uuid == request.UserUuid ? "You have" : $"{target.Username} has")} {(isKickerUser ? "left" : "been kicked from")} one of your chats."
+                    $"{(t.Uuid == request.UserUuid ? "You have" : $"{target.Username} has")} {(isKickerUser ? "left" : "been kicked from")} one of your chats"
                 );
                 
                 _notificationService.Push(t.Devices, notification);

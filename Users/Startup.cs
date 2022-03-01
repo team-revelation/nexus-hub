@@ -2,6 +2,7 @@ using System.Reflection;
 using Contracts.Chats;
 using Contracts.Database;
 using Contracts.Exploring;
+using Contracts.Notifications;
 using Contracts.Redis;
 using Contracts.Users;
 using MediatR;
@@ -28,6 +29,7 @@ namespace Users
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddNotificationService();
             services.AddRedisService();
             services.AddDatabaseService();
             services.AddUserService();

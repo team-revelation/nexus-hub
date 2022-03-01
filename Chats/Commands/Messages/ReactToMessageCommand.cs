@@ -4,7 +4,8 @@ using Types.Chats;
 
 namespace Chats.Commands.Messages
 {
-    public class ReactToMessageCommand : IRequest<Chat>
+    public record ReactToMessageResponse(Chat Chat, Message Message);
+    public class ReactToMessageCommand : IRequest<ReactToMessageResponse>
     {
         public Guid UserUuid { get; }
         public Guid ChatUuid { get; }

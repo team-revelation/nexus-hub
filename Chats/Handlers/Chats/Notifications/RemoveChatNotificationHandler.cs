@@ -1,11 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Chats.Notifications;
+using Chats.Notifications.Chats;
 using Contracts.Redis;
 using MediatR;
-using Types.Sockets;
 
-namespace Chats.Handlers.Notifications
+namespace Chats.Handlers.Chats.Notifications
 {
     public class RemoveChatNotificationHandler : INotificationHandler<RemoveChatNotification>
     {

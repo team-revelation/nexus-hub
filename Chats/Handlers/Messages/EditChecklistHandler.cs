@@ -10,7 +10,7 @@ using Types.Chats;
 
 namespace Chats.Handlers.Messages
 {
-    public class EditChecklistHandler : IRequestHandler<EditChecklistCommand, Chat>
+    public class EditChecklistHandler : IRequestHandler<EditChecklistCommand, EditChecklistResponse>
     {
         private readonly IChatService _chatService;
         
@@ -19,7 +19,7 @@ namespace Chats.Handlers.Messages
             _chatService = chatService;
         }
         
-        public async Task<Chat> Handle(EditChecklistCommand request, CancellationToken cancellationToken)
+        public async Task<EditChecklistResponse> Handle(EditChecklistCommand request, CancellationToken cancellationToken)
         {
             var chat = await _chatService.Get(request.ChatUuid);
             if (chat is null) throw new ArgumentException("This chat does not exist, please try again.");
@@ -39,7 +39,7 @@ namespace Chats.Handlers.Messages
                 Edited = DateTimeOffset.Now.ToUnixTimeMilliseconds()
             };
 
-            return await _chatService.Update(request.ChatUuid, chat);
+            return new(await _chatService.Update(request.ChatUuid, chat), checklist);
         }
     }
 }

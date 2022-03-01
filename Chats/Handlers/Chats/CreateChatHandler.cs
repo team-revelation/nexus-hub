@@ -50,7 +50,7 @@ namespace Chats.Handlers.Chats
                 newChat.Members.AddRange(GetMembers(memberUsers));
                 
                 foreach (var member in memberUsers)
-                    _notificationService.Push(member.Devices, new Notification(NotificationType.CreateChat, "Added to chat", "You have been added to a new chat."));
+                    _notificationService.Push(member.Devices, new Notification(NotificationType.CreateChat, "Added to chat", "You have been added to a new chat"));
             }
             
             var chat = await _chatService.Create(newChat);

@@ -5,10 +5,17 @@ using Chats.Commands;
 using Chats.Commands.Chats;
 using Chats.Commands.Messages;
 using Chats.Notifications;
+using Chats.Notifications.Chats;
 using Chats.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Types.Chats;
+using RemoveMessageNotification = Chats.Notifications.RemoveMessageNotification;
+using SendMessageNotification = Chats.Notifications.SendMessageNotification;
+using UnreadMessageNotification = Chats.Notifications.UnreadMessageNotification;
+using UpdateChecklistNotification = Chats.Notifications.UpdateChecklistNotification;
+using UpdateMessageNotification = Chats.Notifications.UpdateMessageNotification;
+using UpdatePollNotification = Chats.Notifications.UpdatePollNotification;
 
 namespace Chats.Controllers
 {
@@ -112,11 +119,9 @@ namespace Chats.Controllers
         [HttpPut("{uuid:guid}/send")]
         public async Task<IActionResult> Send(Guid uuid, [FromBody] Message message)
         {
-            var res = await _mediator.Send(new SendMessageCommand(uuid, message));
-            res = await _mediator.Send(new FillChatCommand(res));
-            
-            await _mediator.Publish(new UpdateChatNotification(res));
-            return Accepted(res);
+            var (chat, msg) = await _mediator.Send(new SendMessageCommand(uuid, message));
+            await _mediator.Publish(new SendMessageNotification(chat, msg));
+            return Accepted(msg);
         }
 
         /// <summary>
@@ -132,11 +137,9 @@ namespace Chats.Controllers
         [HttpPut("users/{userUuid:guid}/{chatUuid:guid}/{messageUuid:guid}/{pollUuid:guid}/vote/{index:int}")]
         public async Task<IActionResult> Vote(Guid userUuid, Guid chatUuid, Guid messageUuid, Guid pollUuid, int index)
         {
-            var res = await _mediator.Send(new VoteForOptionCommand(userUuid, chatUuid, messageUuid, pollUuid, index));
-            res = await _mediator.Send(new FillChatCommand(res));
-            
-            await _mediator.Publish(new UpdateChatNotification(res));
-            return Accepted(res);
+            var (chat, poll) = await _mediator.Send(new VoteForOptionCommand(userUuid, chatUuid, messageUuid, pollUuid, index));
+            await _mediator.Publish(new UpdatePollNotification(chat, messageUuid, poll));
+            return Accepted(poll);
         }
 
         /// <summary>
@@ -150,11 +153,9 @@ namespace Chats.Controllers
         [HttpPut("{chatUuid:guid}/{messageUuid:guid}/edit")]
         public async Task<IActionResult> Edit(Guid chatUuid, Guid messageUuid, [FromBody] Message message)
         {
-            var res = await _mediator.Send(new EditMessageCommand(messageUuid, chatUuid, message));
-            res = await _mediator.Send(new FillChatCommand(res));
-            
-            await _mediator.Publish(new UpdateChatNotification(res));
-            return Accepted(res);
+            var (chat, msg) = await _mediator.Send(new EditMessageCommand(messageUuid, chatUuid, message));
+            await _mediator.Publish(new UpdateMessageNotification(chat, msg));
+            return Accepted(msg);
         }
 
         /// <summary>
@@ -169,11 +170,9 @@ namespace Chats.Controllers
         [HttpPut("{chatUuid:guid}/{messageUuid:guid}/polls/{pollUuid:guid}/edit")]
         public async Task<IActionResult> Edit(Guid chatUuid, Guid messageUuid, Guid pollUuid, [FromBody] Poll poll)
         {
-            var res = await _mediator.Send(new EditPollCommand(pollUuid, messageUuid, chatUuid, poll));
-            res = await _mediator.Send(new FillChatCommand(res));
-            
-            await _mediator.Publish(new UpdateChatNotification(res));
-            return Accepted(res);
+            var (chat, pll) = await _mediator.Send(new EditPollCommand(pollUuid, messageUuid, chatUuid, poll));
+            await _mediator.Publish(new UpdatePollNotification(chat, messageUuid, pll));
+            return Accepted(pll);
         }
 
         /// <summary>
@@ -188,11 +187,9 @@ namespace Chats.Controllers
         [HttpPut("{chatUuid:guid}/{messageUuid:guid}/checklists/{checklistUuid:guid}/edit")]
         public async Task<IActionResult> Edit(Guid chatUuid, Guid messageUuid, Guid checklistUuid, [FromBody] Checklist checklist)
         {
-            var res = await _mediator.Send(new EditChecklistCommand(checklistUuid, messageUuid, chatUuid, checklist));
-            res = await _mediator.Send(new FillChatCommand(res));
-            
-            await _mediator.Publish(new UpdateChatNotification(res));
-            return Accepted(res);
+            var (chat, list) = await _mediator.Send(new EditChecklistCommand(checklistUuid, messageUuid, chatUuid, checklist));
+            await _mediator.Publish(new UpdateChecklistNotification(chat, messageUuid, list));
+            return Accepted(list);
         }
 
         /// <summary>
@@ -207,11 +204,9 @@ namespace Chats.Controllers
         [HttpPut("users/{userUuid:guid}/{chatUuid:guid}/{messageUuid:guid}/react")]
         public async Task<IActionResult> React(Guid userUuid, Guid chatUuid, Guid messageUuid, [FromBody] Emoticon emoji)
         {
-            var res = await _mediator.Send(new ReactToMessageCommand(userUuid, messageUuid, chatUuid, emoji));
-            res = await _mediator.Send(new FillChatCommand(res));
-            
-            await _mediator.Publish(new UpdateChatNotification(res));
-            return Accepted(res);
+            var (chat, message) = await _mediator.Send(new ReactToMessageCommand(userUuid, messageUuid, chatUuid, emoji));
+            await _mediator.Publish(new UpdateMessageNotification(chat, message));
+            return Accepted(message);
         }
 
         /// <summary>
@@ -225,9 +220,7 @@ namespace Chats.Controllers
         public async Task<IActionResult> Cancel(Guid uuid, Guid messageUuid)
         {
             var res = await _mediator.Send(new RemoveMessageCommand(uuid, messageUuid));
-            res = await _mediator.Send(new FillChatCommand(res));
-            
-            await _mediator.Publish(new UpdateChatNotification(res));
+            await _mediator.Publish(new RemoveMessageNotification(res, messageUuid));
             return Accepted(res);
         }
 
@@ -260,9 +253,7 @@ namespace Chats.Controllers
         public async Task<IActionResult> Unread(Guid chatUuid, Guid messageUuid, Guid userUuid)
         {
             var res = await _mediator.Send(new UnreadMessageCommand(messageUuid, userUuid, chatUuid));
-            res = await _mediator.Send(new FillChatCommand(res));
-
-            await _mediator.Publish(new UpdateChatNotification(res));
+            await _mediator.Publish(new UnreadMessageNotification(userUuid, messageUuid, res));
             return Accepted(res);
         }
 

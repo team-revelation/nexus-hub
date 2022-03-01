@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Contracts.Notifications;
 using Contracts.Users;
 using MediatR;
 using Types.Users;
@@ -13,10 +14,12 @@ namespace Users.Handlers
     public class CancelRequestHandler : IRequestHandler<CancelRequestCommand, User>
     {
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
  
-        public CancelRequestHandler(IUserService userService)
+        public CancelRequestHandler(IUserService userService, INotificationService notificationService)
         {
             _userService = userService;
+            _notificationService = notificationService;
         }
         
         public async Task<User> Handle(CancelRequestCommand request, CancellationToken cancellationToken)
@@ -34,6 +37,8 @@ namespace Users.Handlers
             user.Friends.Remove(user.Friends.Find(userFriend => userFriend.Uuid == request.FriendUuid));
             friend.Friends.Remove(friend.Friends.Find(userFriend => userFriend.Uuid == request.Uuid));
 
+            _notificationService.Push(friend.Devices, new Notification(NotificationType.FriendDecline, "Friend request cancelled", $"{user.Username.Trim()} cancelled their friend request"));
+           
             await _userService.Update(new Dictionary<Guid, User> { { request.Uuid, user }, { friend.Uuid, friend } });
             return user;
         }

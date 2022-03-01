@@ -4,7 +4,8 @@ using Types.Chats;
 
 namespace Chats.Commands.Messages
 {
-    public class VoteForOptionCommand : IRequest<Chat>
+    public record VoteForOptionResponse(Chat Chat, Poll Poll);
+    public class VoteForOptionCommand : IRequest<VoteForOptionResponse>
     {
         public Guid UserUuid { get; }
         public Guid ChatUuid { get; }

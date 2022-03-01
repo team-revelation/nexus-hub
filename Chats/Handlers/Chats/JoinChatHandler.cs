@@ -51,7 +51,7 @@ namespace Chats.Handlers.Chats
                     _notificationService.Push(targets, notification);
                 }
                 
-                _notificationService.Push(user.Devices, new Notification(NotificationType.CreateChat, "Added to chat", "You have been added to an existing chat."));
+                _notificationService.Push(user.Devices, new Notification(NotificationType.CreateChat, "Added to chat", "You have been added to an existing chat"));
             }
             
 
@@ -61,7 +61,7 @@ namespace Chats.Handlers.Chats
                 var notification = new Notification(
                     NotificationType.CreateChat, 
                     "Added to chat", 
-                    "Multiple people have been added to one of your chats."
+                    "Multiple people have been added to one of your chats"
                 );
                 
                 _notificationService.Push(targets, notification);

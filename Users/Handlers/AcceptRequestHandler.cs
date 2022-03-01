@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Contracts.Notifications;
 using Contracts.Users;
 using MediatR;
 using Types.Users;
@@ -13,10 +14,12 @@ namespace Users.Handlers
     public class AcceptRequestHandler : IRequestHandler<AcceptRequestCommand, User>
     {
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
  
-        public AcceptRequestHandler(IUserService userService)
+        public AcceptRequestHandler(IUserService userService, INotificationService notificationService)
         {
             _userService = userService;
+            _notificationService = notificationService;
         }
         
         public async Task<User> Handle(AcceptRequestCommand request, CancellationToken cancellationToken)
@@ -40,6 +43,7 @@ namespace Users.Handlers
             user.Friends[friendIndex].Type = FriendType.Friend;
             friend.Friends[userIndex].Type = FriendType.Friend;
             
+            _notificationService.Push(user.Devices, new Notification(NotificationType.FriendAccept, "Friend request accepted", $"{friend.Username.Trim()} accepted your friend request"));
             await _userService.Update(new Dictionary<Guid, User> { { request.Uuid, user }, { friend.Uuid, friend } });
             return user;
         }

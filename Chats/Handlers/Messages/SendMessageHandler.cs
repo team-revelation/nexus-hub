@@ -13,7 +13,7 @@ using Types.Chats;
 
 namespace Chats.Handlers.Messages
 {
-    public class SendMessageHandler : IRequestHandler<SendMessageCommand, Chat>
+    public class SendMessageHandler : IRequestHandler<SendMessageCommand, SendMessageResponse>
     {
         private readonly IChatService _chatService;
         private readonly IUserService _userService;
@@ -26,7 +26,7 @@ namespace Chats.Handlers.Messages
             _notificationService = notificationService;
         }
         
-        public async Task<Chat> Handle(SendMessageCommand request, CancellationToken cancellationToken)
+        public async Task<SendMessageResponse> Handle(SendMessageCommand request, CancellationToken cancellationToken)
         {
             var chat = await _chatService.Get(request.ChatUuid);
             if (chat is null || chat.Members.All(member => member.Uuid != request.Message.Creator))
@@ -49,9 +49,9 @@ namespace Chats.Handlers.Messages
 
             var users = (await _userService.Query(chat.Members.Select(m => m.Uuid).ToList())).ToList();
             var otherChatUsers = users.Where(u => u.Uuid != newMessage.Creator);
-            _notificationService.Push(otherChatUsers, new Notification($"New message from {users.FirstOrDefault(u => u.Uuid == newMessage.Creator)?.Username ?? "Unknown"}", newMessage));
+            _notificationService.Push(otherChatUsers, new Notification($"New message from {users.FirstOrDefault(u => u.Uuid == newMessage.Creator)?.Username.Trim() ?? "Unknown"}", newMessage));
 
-            return chat;
+            return new (chat, newMessage);
         }
     }
 }

@@ -24,10 +24,24 @@ namespace Contracts.Database.Firestore
 
         public async Task<List<T>> Query<T>(string coll, IEnumerable<string> docs)
         {
+            // Ten is the current limit (22/02/2022) of firebase equality clauses, so we have to batch them for some reason.
+            // Thank you so much Google, I really appreciate it.
+            var batches = docs
+                         .Select((x, i) => new { Index = i, Value = x })
+                         .GroupBy(x => x.Index / 10) 
+                         .Select(x => x.Select(v => v.Value).ToList())
+                         .ToList();
+            
             var collection = Database.Store.Collection(coll);
-            var query = collection.WhereIn(FieldPath.DocumentId, docs);
-            var snap = await query.GetSnapshotAsync();
-            return snap.Documents.Select(d => d.ConvertTo<T>()).ToList();
+            var results = new List<T>();
+            foreach (var batch in batches)
+            {
+                var query = collection.WhereIn(FieldPath.DocumentId, batch);
+                var snap = await query.GetSnapshotAsync();
+                results.AddRange(snap.Documents.Select(d => d.ConvertTo<T>()));
+            }
+            
+            return results;
         }
 
         public async Task<T> Get<T>(string coll, string doc)

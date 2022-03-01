@@ -2,7 +2,7 @@
 using MediatR;
 using Types.Chats;
 
-namespace Chats.Notifications
+namespace Chats.Notifications.Chats
 {
     public class LeaveChatNotification : INotification
     {

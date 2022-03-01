@@ -30,7 +30,7 @@ namespace Types.Users
             Type = type;
             Username = user.Username;
             Uuid = user.Uuid;
-            Email = user.Email;
+            Email = type == FriendType.Friend ? user.Email : null;
             Avatar = user.Avatar;
             Description = user.Description;
             Interests = user.Interests;

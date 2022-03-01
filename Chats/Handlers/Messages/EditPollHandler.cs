@@ -10,7 +10,7 @@ using Types.Chats;
 
 namespace Chats.Handlers.Messages
 {
-    public class EditPollHandler : IRequestHandler<EditPollCommand, Chat>
+    public class EditPollHandler : IRequestHandler<EditPollCommand, EditPollResponse>
     {
         private readonly IChatService _chatService;
         
@@ -19,7 +19,7 @@ namespace Chats.Handlers.Messages
             _chatService = chatService;
         }
         
-        public async Task<Chat> Handle(EditPollCommand request, CancellationToken cancellationToken)
+        public async Task<EditPollResponse> Handle(EditPollCommand request, CancellationToken cancellationToken)
         {
             var chat = await _chatService.Get(request.ChatUuid);
             if (chat is null) throw new ArgumentException("This chat does not exist, please try again.");
@@ -44,7 +44,7 @@ namespace Chats.Handlers.Messages
                 Edited = DateTimeOffset.Now.ToUnixTimeMilliseconds()
             };
 
-            return await _chatService.Update(request.ChatUuid, chat);
+            return new (await _chatService.Update(request.ChatUuid, chat), poll);
         }
     }
 }

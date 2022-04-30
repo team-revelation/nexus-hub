@@ -16,7 +16,7 @@
         <PackageReference Include="Nexus.Contracts.Notifications" Version="0.4.15" />
         <PackageReference Include="Nexus.Contracts.Redis" Version="0.4.10" />
         <PackageReference Include="Nexus.Contracts.Users" Version="0.5.3" />
-        <PackageReference Include="Nexus.Types" Version="0.5.1" />
+        <PackageReference Include="Nexus.Types" Version="0.5.5" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 

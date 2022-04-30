@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
@@ -14,6 +15,13 @@ namespace Contracts.Redis
                 Password: Environment.GetEnvironmentVariable("REDIS_PASSWORD")
             );
         }
+
+        private static void ConfigureKeySpaceEvents(IConnectionMultiplexer multiplexer)
+        {
+            var server = multiplexer.GetServer(multiplexer.GetEndPoints().Single());
+            server.ConfigSet("notify-keyspace-events", "KEe");
+        }
+
         public static void AddRedisService(this IServiceCollection services, RedisCredentials credentials)
         {
             var multiplexer = ConnectionMultiplexer.Connect(
@@ -24,10 +32,12 @@ namespace Contracts.Redis
               }
             );
 
+            ConfigureKeySpaceEvents(multiplexer);
+
             services.AddSingleton<IConnectionMultiplexer>(multiplexer);
             services.AddScoped<IRedisService, RedisService>();
         }
-        
+
         public static void AddRedisService(this IServiceCollection services)
         {
             var (database, username, password) = GetRedisCredentials();
@@ -38,6 +48,8 @@ namespace Contracts.Redis
                     Password = password,
                 }
             );
+
+            ConfigureKeySpaceEvents(multiplexer);
 
             services.AddSingleton<IConnectionMultiplexer>(multiplexer);
             services.AddScoped<IRedisService, RedisService>();

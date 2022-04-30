@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Authentication;
-using Chats.Commands;
 using Chats.Commands.Chats;
 using Chats.Commands.Messages;
+using Chats.Commands.Other;
 using Chats.Notifications;
 using Chats.Notifications.Chats;
 using Chats.Queries;
@@ -42,6 +42,26 @@ namespace Chats.Controllers
             var res = await _mediator.Send(new GetChatsQuery());
             res = await _mediator.Send(new FillChatsCommand(res));
             
+            return Ok(res);
+        }
+
+
+        /// <summary>
+        /// Set the typing status of a user in a chat.
+        /// </summary>
+        /// <param name="isTyping"></param>
+        /// <param name="userUuid"></param>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        [TokenAuth]
+        [HttpPut("users/{userUuid:guid}/{uuid:guid}/typing")]
+        public async Task<IActionResult> SetTypingStatus([FromQuery] bool state, Guid userUuid, Guid uuid)
+        {
+            var chat = await _mediator.Send(new GetChatQuery(uuid));
+
+            var res = await _mediator.Send(new SetTypingCommand(userUuid, chat, state));
+            await _mediator.Publish(new TypingNotification(res, chat));
+
             return Ok(res);
         }
 

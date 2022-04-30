@@ -16,11 +16,17 @@ namespace Contracts.Redis
             _redis = redis;
         }
 
-        public async Task Subscribe (string channel, Action<RedisData> onMessage)
+        public void Subscribe(string channel, Action<RedisChannel, RedisValue> onKeyEvent)
         {
             var sub = _redis.GetSubscriber();
-            var queue = await sub.SubscribeAsync(channel);
-            
+            sub.Subscribe($"__keyspace@0__:{channel}", onKeyEvent);
+        }
+
+        public void Subscribe(string channel, Action<RedisData> onMessage)
+        {
+            var sub = _redis.GetSubscriber();
+            var queue = sub.Subscribe(channel);
+
             queue.OnMessage(message =>
                 {
                     var value = JsonConvert.DeserializeObject<RedisData>(message.Message, _serializerSettings);
@@ -28,7 +34,7 @@ namespace Contracts.Redis
                 }
             );
         }
-        
+
         public async Task Unsubscribe(string channel)
         {
             var sub = _redis.GetSubscriber();

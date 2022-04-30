@@ -14,11 +14,13 @@ namespace Types.Chats
         [FirestoreProperty] public string Avatar { get; set; }
         [FirestoreProperty(ConverterType = typeof(GuidConverter))] public Guid Creator { get; set; }
         [FirestoreProperty] public long Creation { get; set; }
-        
+
         [FirestoreProperty] public List<Role> Roles { get; set; } = new();
         [FirestoreProperty] public List<Member> Members { get; set; } = new();
         [FirestoreProperty] public List<Message> Messages { get; set; } = new();
     }
-    
-    public record JoinRequest (List<Guid> UserUuids);
+
+    public record Typing(Guid UserUuid, bool IsTyping);
+    public record Status(Guid ChatUuid,  List<Typing> Typing);
+    public record JoinRequest(List<Guid> UserUuids);
 }
